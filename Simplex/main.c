@@ -2,8 +2,9 @@
 
 void main(int argc[],char *argv[])
 {
-	FILE *f;
-	f = fopen(argv[1],"a");
+	system("clear");
+    	FILE *f;
+	f = fopen(argv[1],"a+");
 	if (f == NULL)
 	{ 
 		printf("file doesn't exist\n");

@@ -14,7 +14,7 @@ void Data(int argc,char *argv[])
     { printf("file doesn't exist\n");
 	exit(-1);
     }
-    printf("\n SIMPLEX METHOD\n\n");
+    printf(" SIMPLEX METHOD\n\n");
     printf(" MAXIMIZE (Y/N) ? ");
     scanf("%c", &R);
     printf("\n NUMBER OF VARIABLES OF THE FUNCTION ? ");
@@ -31,60 +31,49 @@ void Data(int argc,char *argv[])
     if (R == 'Y' || R=='y')
     {
 	printf("\n 'MAXIMIZING' \n");
+	fprintf(f,"\n 'MAXIMIZING' \n");
 	fprintf(f,"\n");
 	R1 = 1.0;
     }
     else
     {
 	printf("\n 'MINIMIZING' \n");
+	fprintf(f,"\n 'MINIMIZING' \n");
 	fprintf(f,"\n");
-	fputc (1,f);
 	R1 = -1.0;
     }
     printf("\n INPUT COEFFICIENTS OF THE FUNCTION:\n");
     fprintf(f,"\n INPUT COEFFICIENTS OF THE FUNCTION:\n");
     for (j = 1; j<=NV; j++)
     {
-	printf(" #%d ? ", j); 
-	fprintf(f," #%d ? ", j); 
+	printf(" x%d ? ", j); 
+	fprintf(f," x%d ? ", j); 
 	scanf("%lf", &R2);
-	fprintf(f," %lf\n", R2);
+	fprintf(f," %6.3lf\n", R2);
 	array[1][j+1] = R2 * R1;
     }
     fprintf(f," Right hand side ? "); 
-    fputc (1,f);
     printf(" Right hand side ? "); 
-    fscanf(f,"%lf", &R2);
-    fputc (1,f);
     scanf("%lf", &R2);
-    fscanf(f,"%lf", &R2);
-    fputc (1,f);
+    fprintf(f," %6.3lf\n", R2);
     array[1][1] = R2 * R1;
     for (i = 1; i<=NC; i++) 
     {
 	printf("\n CONSTRAINT #%d:\n", i);
 	fprintf(f,"\n CONSTRAINT #%d:\n", i);
-	fputc (1,f);
 	for (j = 1; j<=NV; j++) 
 	{
-	    printf(" #%d ? ", j); 
-	    fprintf(f," #%d ? ", j); 
-	    fputc (1,f);
+	    printf(" x%d ? ", j); 
+	    fprintf(f," x%d ? ", j); 
 	    scanf("%lf", &R2);
-	    fscanf(f,"%lf", &R2);
-	    fputc (1,f);
+	    fprintf(f,"%6.3lf\n",R2);
 	    array[i + 1][j + 1] = -R2;
 	}
 	printf(" Right hand side ? ");
 	fprintf(f," Right hand side ? ");
-	fputc (1,f);
 	scanf("%lf", &array[i+1][1]);
-	fscanf(f,"%lf", &array[i+1][1]);
-	fputc (1,f);
+	fprintf(f,"%6.3lf\n",array[i+1][1]);
     }
-    printf("\n\n RESULTS:\n\n");
-    fprintf(f,"\n\n RESULTS:\n\n");
-    fputc (1,f);
     for(j=1; j<=NV; j++) 
 	array[0][j+1] = j;
     for(i=NV+1; i<=NV+NC; i++) 
@@ -173,6 +162,8 @@ void Optimize()
 }
 void Results() 
 {
+    printf("\n\n RESULTS:\n\n");
+    fprintf(f,"\n\n RESULTS:\n\n");
     int i,j;
     if (XERR == 0)
 	goto PrintSol;
@@ -181,19 +172,17 @@ void Results()
     fputc (1,f);
     goto End0;
 PrintSol:
+    print_tableau();
     for (i=1; i<=NV; i++)
 	for (j=2; j<=NC+1; j++) 
 	{
 	    if (array[j][0] != 1.0*i) 
 		goto End1;
-	    printf(" VARIABLE #%d: %f\n", i, array[j][1]);
-	    fprintf(f," VARIABLE #%d: %f\n", i, array[j][1]);
-	    fputc (1,f);
+	    printf(" VARIABLE #%d: %6.3lf\n", i, array[j][1]);
+	    fprintf(f," VARIABLE #%d: %6.3lf\n", i, array[j][1]);
 End1: ;}
-    print_tableau();
-    printf("\n ECONOMIC FUNCTION: %f\n", array[1][1]);
-    fprintf(f,"\n ECONOMIC FUNCTION: %f\n", array[1][1]);
-    fputc (1,f);
+    printf("\n ECONOMIC FUNCTION: %6.3lf\n", array[1][1]);
+    fprintf(f,"\n ECONOMIC FUNCTION: %6.3lf\n", array[1][1]);
 End0:
     printf("\n");
     fprintf(f,"\n");
@@ -201,41 +190,71 @@ End0:
 
 void print_tableau()
 {
+
+    nl(80);
     int i, j;
-    printf("\nFinal Tableau\n");
+    printf("\nFinal Tableau\n\n");
+    fprintf(f,"\nFinal Tableau\n\n");
     nl(60);
-    printf("%-6s%5s", "col:", "b[i]");
-    for(j=1;j<NV+1; j++) { printf("    x%d,", (int)array[0][j+1]); } printf("\n");
+    printf("%-6s%5s", "Basic:", "Sol.");
+    fprintf(f,"%-6s%5s", "Basic:", "Sol.");
+    for(j=1;j<NV+1; j++) 
+    { 
+	printf("    x%d", (int)array[0][j+1]); 
+	fprintf(f,"    x%d", (int)array[0][j+1]); 
+    } 
+    printf("\n");
+    fprintf(f,"\n");
 
     for(i=0;i<NC+1; i++) 
     {
 	if (i==0)
 	{
 	    if(R=='1')
-		printf("MAX:"); 
+	    {
+		printf("MIN:"); 
+		fprintf(f,"MIN:"); 
+	    }
 	    else
-		printf("MIN:");
+	    {
+		printf("MAX:");
+		fprintf(f,"MAX:");
+	    }
 	}
 	else
+	{
 	    printf("x%d: ", (int)array[i+1][0]);
+	    fprintf(f,"x%d: ", (int)array[i+1][0]);
+	}
 	for(j=0;j<NV+1; j++) 
 	{
-	    if ( equal( (int)array[i+1][j+1] , array[i+1][j+1] ) )
-		printf(" %6d", (int)array[i+1][j+1]);
-	    else
-		printf(" %6.2lf", array[i+1][j+1]);
+	    if(j!=0){
+		printf(" %6.3lf", -array[i+1][j+1]);
+		fprintf(f," %6.3lf", -array[i+1][j+1]);
+	    }
+	    else{
+		printf(" %6.3lf", array[i+1][j+1]);
+		fprintf(f," %6.3lf", array[i+1][j+1]);
+	    }
 	}
 	printf("\n");
+	fprintf(f,"\n");
     }
     nl(60);
+    printf("\n");
+    nl(80);
 }
 
 void nl(int k)
 {   
     int j; 
     for(j=0;j<k;j++) 
+    {
 	putchar('-');
+	putc('-',f);
+    }
     putchar('\n'); 
+    putc('\n',f);
 }
 
 int equal(double a, double b) 
