@@ -93,7 +93,7 @@ void Simplex()
 void Pivot() 
 {
   double RAP,V,XMAX;
-  int i,j;
+  int i,j,leav;
   XMAX = 0.0;
   for(j=2; j<=NV+1; j++)
   {
@@ -104,6 +104,8 @@ void Pivot()
     }
   }
   RAP = 999999.0;
+  
+  leav=0;
   for (i=2; i<=NC+1; i++)
   {
     if (array[i][P2] >= 0.0) 
@@ -113,8 +115,16 @@ void Pivot()
     {
       RAP = V;
       P1 = i;
+      leav=1;
     }
   }
+  if(leav==0){
+    printf("\nRESULTS:\n\n");
+    printf("\n UNBOUNDED SOLUTION...\n\n");
+    fprintf(f,"\n UNBOUNDED SOLUTION...\n\n");
+    exit(0);
+  }
+      
   V = array[0][P2];
   array[0][P2] = array[P1][0];
   array[P1][0] = V;
@@ -179,7 +189,8 @@ void Results()
     for (j=2; j<=NC+1; j++) 
     {
       if (array[j][0] != 1.0*i){
-        pseudo=1;
+        if(array[j][1]==0)
+            pseudo=1;
         continue;
       }
       printf(" VARIABLE #%d: %6.3lf\n", i, array[j][1]);
