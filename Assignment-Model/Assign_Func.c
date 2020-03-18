@@ -1,9 +1,9 @@
 #include "Assign_Header.h"
-
 #define INF (0x7FFFFFFF)
+
 #define verbose (1)
 
-void inputArray(int m,int n)
+int** inputArray(int m,int n)
 {
   Array= malloc(m*sizeof(int));
   Result= malloc(m*sizeof(int));
@@ -12,19 +12,21 @@ void inputArray(int m,int n)
     Array[i]=(int *) malloc(n*sizeof(int));
     Result[i]=(int *) malloc(n*sizeof(int));
   }
-  for (i=0;i<m;++i)
-    for (j=0;j<n;++j){
+  size1=m,size2=n;
+  for (i=0;i<size1;++i)
+    for (j=0;j<size2;++j){
       fscanf(f,"%d",&data);
       fgetc(f);
       Array[i][j]=data;
     }
+  return Array;
 }
 
-void hungarian(int m, int n)
+void hungarian()
 {
   int i,j;
-  int false=0,true=1;
 
+  unsigned int m=size1,n=size2;
   int k;
   int l;
   int s;
@@ -41,22 +43,22 @@ void hungarian(int m, int n)
   int unmatched;
   int cost=0;
 
-  for (i=0;i<m;++i)
-    for (j=0;j<n;++j)
-      Result[i][j]=false;
+  for (i=0;i<size1;++i)
+    for (j=0;j<size2;++j){
+      Result[i][j]=0;
+    }
 
   // Begin subtract column minima in order to start with lots of zeroes 12
-  printf("Using heuristic\n");
-  for (l=0;l<n;l++)
+  for (l=0;l<m;l++)
   {
-    s=Array[0][l];
-    for (k=1;k<n;k++)
-      if (Array[k][l]<s)
-	s=Array[k][l];
+    s=Array[l][0];
+    for (k=1;k<m;k++)
+      if (Array[l][k]<s)
+        s=Array[l][k];
     cost+=s;
     if (s!=0)
-      for (k=0;k<n;k++)
-	Array[k][l]-=s;
+      for (k=0;k<m;k++)
+        Array[l][k]-=s;
   }
   // End subtract column minima in order to start with lots of zeroes 12
 
@@ -74,20 +76,16 @@ void hungarian(int m, int n)
     s=Array[k][0];
     for (l=1;l<n;l++)
       if (Array[k][l]<s)
-	s=Array[k][l];
+        s=Array[k][l];
     row_dec[k]=s;
     for (l=0;l<n;l++)
       if (s==Array[k][l] && row_mate[l]<0)
       {
-	col_mate[k]=l;
-	row_mate[l]=k;
-	if (verbose)
-	  printf("matching col %d==row %d\n",l,k);
-	goto row_done;
+        col_mate[k]=l;
+        row_mate[l]=k;
+        goto row_done;
       }
     col_mate[k]= -1;
-    if (verbose)
-      printf("node %d: unmatched row %d\n",t,k);
     unchosen_row[t++]=k;
 row_done:
     ;
@@ -100,100 +98,85 @@ row_done:
   unmatched=t;
   while (1)
   {
-    if (verbose)
-      printf("Matched %d rows.\n",m-t);
     q=0;
     while (1)
     {
       while (q<t)
       {
-	// Begin explore node q of the forest 19
-	{
-	  k=unchosen_row[q];
-	  s=row_dec[k];
-	  for (l=0;l<n;l++)
-	    if (slack[l])
-	    {
-	      int del;
-	      del=Array[k][l]-s+col_inc[l];
-	      if (del<slack[l])
-	      {
-		if (del==0)
-		{
-		  if (row_mate[l]<0)
-		    goto breakthru;
-		  slack[l]=0;
-		  parent_row[l]=k;
-		  if (verbose)
-		    printf("node %d: row %d==col %d--row %d\n",
-			t,row_mate[l],l,k);
-		  unchosen_row[t++]=row_mate[l];
-		}
-		else
-		{
-		  slack[l]=del;
-		  slack_row[l]=k;
-		}
-	      }
-	    }
-	}
-	// End explore node q of the forest 19
-	q++;
+        // Begin explore node q of the forest 19
+        {
+          k=unchosen_row[q];
+          s=row_dec[k];
+          for (l=0;l<n;l++)
+            if (slack[l])
+            {
+              int del;
+              del=Array[k][l]-s+col_inc[l];
+              if (del<slack[l])
+              {
+                if (del==0)
+                {
+                  if (row_mate[l]<0)
+                    goto breakthru;
+                  slack[l]=0;
+                  parent_row[l]=k;
+                  unchosen_row[t++]=row_mate[l];
+                }
+                else
+                {
+                  slack[l]=del;
+                  slack_row[l]=k;
+                }
+              }
+            }
+        }
+        // End explore node q of the forest 19
+        q++;
       }
 
       // Begin introduce a new zero into the matrix 21
       s=INF;
       for (l=0;l<n;l++)
-	if (slack[l] && slack[l]<s)
-	  s=slack[l];
+        if (slack[l] && slack[l]<s)
+          s=slack[l];
       for (q=0;q<t;q++)
-	row_dec[unchosen_row[q]]+=s;
+        row_dec[unchosen_row[q]]+=s;
       for (l=0;l<n;l++)
-	if (slack[l])
-	{
-	  slack[l]-=s;
-	  if (slack[l]==0)
-	  {
-	    // Begin look at a new zero 22
-	    k=slack_row[l];
-	    if (verbose)
-	      printf(
-		  "Decreasing uncovered elements by %d produces zero at [%d,%d]\n",
-		  s,k,l);
-	    if (row_mate[l]<0)
-	    {
-	      for (j=l+1;j<n;j++)
-		if (slack[j]==0)
-		  col_inc[j]+=s;
-	      goto breakthru;
-	    }
-	    else
-	    {
-	      parent_row[l]=k;
-	      if (verbose)
-		printf("node %d: row %d==col %d--row %d\n",t,row_mate[l],l,k);
-	      unchosen_row[t++]=row_mate[l];
-	    }
-	    // End look at a new zero 22
-	  }
-	}
-	else
-	  col_inc[l]+=s;
+        if (slack[l])
+        {
+          slack[l]-=s;
+          if (slack[l]==0)
+          {
+            // Begin look at a new zero 22
+            k=slack_row[l];
+            if (row_mate[l]<0)
+            {
+              for (j=l+1;j<n;j++)
+                if (slack[j]==0)
+                  col_inc[j]+=s;
+              goto breakthru;
+            }
+            else
+            {
+              parent_row[l]=k;
+              unchosen_row[t++]=row_mate[l];
+            }
+            // End look at a new zero 22
+          }
+        }
+        else
+          col_inc[l]+=s;
       // End introduce a new zero into the matrix 21
     }
 breakthru:
     // Begin update the matching 20
-    if (verbose)
-      printf("Breakthrough at node %d of %d!\n",q,t);
     while (1)
     {
       j=col_mate[k];
       col_mate[k]=l;
       row_mate[l]=k;
-      if (verbose)
-	printf("rematching col %d==row %d\n",l,k);
       if (j<0)
-	break;
+        break;
       k=parent_row[j];
       l=j;
     }
@@ -210,9 +193,7 @@ breakthru:
     for (k=0;k<m;k++)
       if (col_mate[k]<0)
       {
-	if (verbose)
-	  printf("node %d: unmatched row %d\n",t,k);
-	unchosen_row[t++]=k;
+        unchosen_row[t++]=k;
       }
     // End get ready for another stage 17
   }
@@ -222,7 +203,7 @@ done:
   for (k=0;k<m;k++)
     for (l=0;l<n;l++)
       if (Array[k][l]<row_dec[k]-col_inc[l])
-	exit(0);
+        exit(0);
   for (k=0;k<m;k++)
   {
     l=col_mate[k];
@@ -240,7 +221,7 @@ done:
 
   for (i=0;i<m;++i)
   {
-    Result[i][col_mate[i]]=true;
+    Result[i][col_mate[i]]=1;
     /*TRACE("%d - %d\n", i, col_mate[i]);*/
   }
   for (k=0;k<m;++k)
@@ -256,6 +237,34 @@ done:
     cost+=row_dec[i];
   for (i=0;i<n;i++)
     cost-=col_inc[i];
+  putchar('\n');
   printf("Cost is %d\n",cost);
-}
 
+  printf("\nFinal Solution\n");
+  char ch='A',sp=' ';
+  s=1;
+  putchar('\n');
+  printf("%6c",sp);
+  for(j=0;j<n;j++){
+    printf("|%3d  ", s++);
+  }
+  putchar('\n');
+  for(i=0;i<m;i++) {
+    printf("|%3c  ", ch++);
+    for(j=0;j<n;j++) {
+      if(Result==NULL) break;
+      if(Result[i][j]==1){
+        printf("|  0  ");
+      }
+      else{
+        printf("|  -  ");
+      }
+    }
+    printf("\n");
+  }
+  printf("\n");
+  for(i=0;i<m;i++)
+    free(Result[i]);
+  free(*Result);
+
+}
