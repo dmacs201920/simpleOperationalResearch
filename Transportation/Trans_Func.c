@@ -1,15 +1,25 @@
 /*                                     AUM SRI SAI RAM
-  Purpose:
-  Written on:
-  Written by:
-*/
+Purpose:
+Written on:
+Written by:
+ */
 
 #include "Trans_Header.h"
 
 static int M,N;
 static int nbasic,count=0;
+/*
+   Here,
+   M,N is used for storing the no. of sources and destinations respectively.
+   nbasic represents no. of basic variables for the given problem.
+   count is used for displaying tableu no.s at each iteration.
+ */
+
 node* newNode(int d,int r,int c) {
+  //This function creates a new node and allocates storage for it.
   node* temp;
+  // Here, temp is a new node pointer.
+
   temp=(node *) malloc(sizeof(node));
   temp->cost = d;
   temp->right = temp->down = NULL;
@@ -30,39 +40,47 @@ node* constructTableu(int m, int n) {
   M=m,N=n;
   nbasic=M*N-(M+N-1);
   int balancecheck[M+N];
+  /*
+     Here, data is used for taking input(i.e. costs, supply, demand.).
+     mainhead is for storing the address of the first node in 2-D tableu.
+     head[m+2] is the addresses of first nodes in each row.
+     righttemp,temp1,temp2 are temporary pointers used for connecting two nodes.
+     newptr stores address of new node created.
+     balancecheck[M+N] is used to adjust unmatched total demand and total supply. 
+   */
 
   for (i = 0; i <= m; i++) {
     head[i] = NULL;
     for ( j = 0; j <= n; j++) {
 
       if(i==m && j==n)
-	break;
-      
+        break;
+
       if(i<m){
-	if(j<n){
-	  fscanf(f,"%d",&data);
-	  fgetc(f);
-	}
-	else{
-	  fgetc(f);
-	  fscanf(f,"%d",&data);
-	  fgetc(f);
-	  balancecheck[k++]=data;
-	}
+        if(j<n){
+          fscanf(f,"%d",&data);
+          fgetc(f);
+        }
+        else{
+          fgetc(f);
+          fscanf(f,"%d",&data);
+          fgetc(f);
+          balancecheck[k++]=data;
+        }
       }
       else{
-	fscanf(f,"%d",&data);
-	fgetc(f);
-	balancecheck[k++]=data;
+        fscanf(f,"%d",&data);
+        fgetc(f);
+        balancecheck[k++]=data;
       }
 
       newptr = newNode(data,i,j);
       if (!mainhead)
-	mainhead = newptr;
+        mainhead = newptr;
       if (!head[i])
-	head[i] = newptr;
+        head[i] = newptr;
       else
-	righttemp->right = newptr;
+        righttemp->right = newptr;
       righttemp = newptr;
     }
     if(i!=m)
@@ -91,8 +109,16 @@ node* constructTableu(int m, int n) {
 }
 
 void BalanceTableau(int *array,int *M,int *N,node *head){
+  //This function checks if the total demand equals total supply and adjusts if not.
+
   int i, j, k, sum=0, count;
   node *temp, *temp0=NULL, *temp1, *def, *def1, *head1;
+  /*
+     Here,
+     i,j,k are iterative variables
+     sum is used for comparing total demand and total supply
+     count is iterative variable used for creating dummy nodes or dummy destinations.
+   */
   for (i=0; i<*M; i++)
     sum+=array[i];
   for (j=*M; j<*N+*M; j++)
@@ -112,8 +138,8 @@ void BalanceTableau(int *array,int *M,int *N,node *head){
       if(temp0==NULL)
         temp0=temp;
       else{
-	temp0->down=temp;
-	temp0=temp;
+        temp0->down=temp;
+        temp0=temp;
       }
     }
     count=0;
@@ -144,8 +170,8 @@ void BalanceTableau(int *array,int *M,int *N,node *head){
       if(temp0==NULL)
         temp0=temp;
       else{
-	temp0->right=temp;
-	temp0=temp;
+        temp0->right=temp;
+        temp0=temp;
       }
     }
     count=0;
@@ -165,9 +191,17 @@ void BalanceTableau(int *array,int *M,int *N,node *head){
 }
 
 void display(node* head) {
+  //This function displays the tableau at each iteration(quantity, cost ,basic/nonmbasic components of each node.
+
   node *rp, *dp = head;
   int i,j;
   char *mes;
+  /*
+     Here,rp and dp are for traversing the tableau rightwards and downwards respectively.
+     i,j are used as iterative variables.
+     mes is used for a string display.
+   */
+
   nl(70);
   mes="Tableau";
   fprintf(f,"%s %d:\n",mes,count);
@@ -189,7 +223,15 @@ void display(node* head) {
 }
 
 void initialiseNW(node *head){
+  //This function is used for choosing the starting solution using North-West corner method
+
   node *p = head;int i=1,j=1,r=0;
+  /*
+     Here,
+     p is a node pointer used for traversing the tableau.
+     i,j are iterative variables.
+   */
+
   while(p->right->right!=NULL && p->down->down!=NULL) {
     r=enterQuan(p,i,j);
     if(r==0)
@@ -200,9 +242,16 @@ void initialiseNW(node *head){
 }
 
 int enterQuan(node *n,int r, int c){
-  int i=1,j=1,q=0,rs=0;
-  int dem=0,sup=0;
+  //This function enters the quantity at each nodal position taking the respective demand and supply considerations.
+
+  int q=0,rs=0;
   node *d=n , *s=n;
+  /*
+     Here,q is used for choosing min. of the respective demand and supply.
+     rs is a boolean variable which indicates min. of the demand and suuply.
+     d and s are node pointers to traverse the tableau downwards and rightwards respectively.
+   */
+
   while(d->down!=NULL)
     d=d->down;
   while(s->right!=NULL)
@@ -222,12 +271,22 @@ int enterQuan(node *n,int r, int c){
 }
 
 void iter_nFindSol(node *head){
+  //This function iterates through the tableau at each iteration(as per the transportation algorithm).
+
   int dum[M+N],ind[M+N],
     i,j,t,d,q=0,count=1;
   nonbasic *h1=NULL,*temp1;
   clos_path *h2=NULL,*h3=NULL,*h4=NULL,*temp2;
   node *k=head,*l=head;
   node *ent=NULL,*leav=NULL;
+  /*
+     Here,
+     h1,temp1 are nonbasic pointers, one representing the head in nonbasic list, the other, used for freeing the list.
+     h2, h3 are clos_path pointers, one used for traversal, the other, for soring the head.
+     k, l are node pointers used for traversing the tableau.
+     ent and leav are node pointers representing entering and leaving variables at each iteration. 
+   */
+
   while(1){
     Initialise(dum,ind,M+N);
     h1=NULL,h2=NULL,h3=NULL,i=0,t=1;
