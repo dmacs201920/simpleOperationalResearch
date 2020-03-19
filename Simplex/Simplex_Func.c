@@ -228,16 +228,8 @@ void print_tableau()
   {
     if (i==0)
     {
-      if(R=='1')
-      {
-        printf("MIN:"); 
-        fprintf(f,"MIN:"); 
-      }
-      else
-      {
-        printf("MAX:");
-        fprintf(f,"MAX:");
-      }
+        printf("Z:  "); 
+        fprintf(f,"Z:  "); 
     }
     else
     {

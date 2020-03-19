@@ -5,9 +5,10 @@
 
 int M,N;
 
+//This function takes the input from the file
 void inputArray(int m,int n)
 {
-    Array= malloc(m*sizeof(int));
+    Array= malloc(m*sizeof(int));           
     Result= malloc(m*sizeof(int));
     int i,j,data;
     for(i=0;i<m;i++)
@@ -25,6 +26,7 @@ void inputArray(int m,int n)
         }
 }
 
+//This function runs the processes of the hungarian method
 void hungarian()
 {
     int i,j;
@@ -52,19 +54,19 @@ void hungarian()
             Result[i][j]=0;
         }
 
-    // Begin subtract column minima in order to start with lots of zeroes
-    for (l=0;l<n;l++)
+    // Begin subtract row minima in order to start with lots of zeroes
+    for (l=0;l<m;l++)
     {
-        s=Array[0][l];
-        for (k=1;k<n;k++)
-            if (Array[k][l]<s)
-                s=Array[k][l];
+        s=Array[l][0];
+        for (k=1;k<m;k++)
+            if (Array[l][k]<s)
+                s=Array[l][k];
         cost+=s;
         if (s!=0)
-            for (k=0;k<n;k++)
-                Array[k][l]-=s;
+            for (k=0;k<m;k++)
+                Array[l][k]-=s;
     }
-    // End subtract column minima in order to start with lots of zeroes
+    // End subtract row minima in order to start with lots of zeroes
 
     // Begin initial state
     t=0;
@@ -207,6 +209,7 @@ breakthru:
 
 }
 
+//This function checks the matrix for the Optimal assignment
 void doubleCheck(int row_dec[M],int col_inc[N],int col_mate[M],int cost)
 {
     int k=0,l=0,i=0;
@@ -249,6 +252,7 @@ void doubleCheck(int row_dec[M],int col_inc[N],int col_mate[M],int cost)
     exit(1);
 }
 
+//This function gives us the Optimal solution and Optimal assignment in form of a tableu
 void finalSol(int cost)
 {
     char ch='A',sp=' ';
@@ -257,6 +261,7 @@ void finalSol(int cost)
 
     printf("\nFinal Solution\n");
     putchar('\n');
+    nl(100);
     printf("%6c",sp);
     for(j=0;j<N;j++)
     {
@@ -283,7 +288,7 @@ void finalSol(int cost)
     printf("\n");
 
     printf("Cost is %d\n",cost);
-
+    nl(100);
     for(i=0;i<M;i++){
         free(Result[i]);
         free(Array[i]);
@@ -291,3 +296,13 @@ void finalSol(int cost)
     free(*Result);
     free(*Array);
 }
+
+//This function prints the line ---------------------------
+void nl(int k)
+{   
+    int j; 
+    for(j=0;j<k;j++) 
+        putchar('-');
+    putchar('\n'); 
+}
+
