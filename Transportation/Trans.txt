@@ -159,7 +159,6 @@ Final Solution
 
 Total cost:6590
 
-<<<<<<< HEAD
 
 
 ----------------------------------------------------------------------
@@ -214,5 +213,3 @@ Final Solution
 
 Total cost:6590
 
-=======
->>>>>>> cca76242d021591ea2abed8a3ff1bc756ece9bc5

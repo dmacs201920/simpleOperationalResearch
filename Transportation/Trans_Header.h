@@ -1,6 +1,14 @@
 /*Purpose:
+             To declare 
+               1.Functions used.
+               2.Non-primitive datatypes.
+               3.Global variable.
   Written by:
+             P.Sai Srujan
+             III B.Sc-Maths
+             171207
   Written on:
+             
  */
 #include<stdio.h>
 #include<stdlib.h>
