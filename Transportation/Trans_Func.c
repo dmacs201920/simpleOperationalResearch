@@ -178,7 +178,6 @@ void BalanceTableau(int *array,int *M,int *N,node *head){
     def1=def;
     while(count<2){
       temp=newNode(0-sum,-1,-1);
-      printf("Re..\n");
       temp0->right=temp;
       temp0=temp;
       temp->down=def1->down;
