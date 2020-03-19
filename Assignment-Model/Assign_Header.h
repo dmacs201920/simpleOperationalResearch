@@ -1,10 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int size1,size2;
-int **Array;
-int **Result;
+static int **Array;
+static int **Result;
 FILE *f;
 
-int** inputArray(int m,int n);
+void inputArray(int m,int n);
 void hungarian();
+void finalSol(int cost);
+void doubleCheck(int row_dec[],int col_inc[],int col_mate[],int cost);

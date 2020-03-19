@@ -17,7 +17,7 @@ void main(int argc,char *args[])
 
   fscanf(f,"%d",&m),fgetc(f),fscanf(f,"%d",&n),fgetc(f);
 
-  Array=inputArray(m,n);
+  inputArray(m,n);
 
   hungarian();
 
