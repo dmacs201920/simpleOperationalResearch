@@ -32,6 +32,7 @@ node* newNode(int d,int r,int c) {
 }
 
 node* constructTableu(int m, int n) {
+  //This function creates a tableau for the input (i.e. Transportation problem) 
   int data,k=0,i,j;
   node* mainhead = NULL;
   node* head[m+2];
@@ -178,6 +179,7 @@ void BalanceTableau(int *array,int *M,int *N,node *head){
     def1=def;
     while(count<2){
       temp=newNode(0-sum,-1,-1);
+      printf("Re..\n");
       temp0->right=temp;
       temp0=temp;
       temp->down=def1->down;
@@ -362,12 +364,13 @@ void iter_nFindSol(node *head){
 
 int findNum(int a[M+N],int i,int j){
   int k=0;
-  if(i<0 && j<0){
+  /*if(i<0 && j<0){
     while(k<M+N)
       if(a[k]==i)
 	return k;
     return 0;
   }
+  */
   while(k<M+N){
     if(a[k]==i || a[k]==j)
       return a[k];
