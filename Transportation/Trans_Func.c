@@ -1,7 +1,12 @@
 /*                                     AUM SRI SAI RAM
 Purpose:
+           Defining the functions used in the Trasportation algorithm implementation
 Written on:
+           20-03-2020
 Written by:
+           P.Sai Srujan
+           III BSc Maths
+           171207
  */
 
 #include "Trans_Header.h"
@@ -393,8 +398,12 @@ void Initialise(int *A,int *B,int n){
 }
 
 int findNode(node *h,clos_path *h3){
-
+  //This function returns whether the clos_path node(*h3) is present in the given list or not
   clos_path *t=h3;
+  /*
+     Here,
+     t is a temporary clos_path pointer used for traversing the list
+   */
   if(t==NULL) return 0;
   while(t!=NULL){
     if(t->var==h)
@@ -405,7 +414,12 @@ int findNode(node *h,clos_path *h3){
 }
 
 nonbasic* addNonb(node *g,nonbasic *head){
+  //This function adds a node with var g to the given nonbasic list 
   nonbasic *temp=head, *t;
+  /*
+     Here,
+     temp, t are temporary pointers used for traversal and creating a new node respectively
+   */
   t=(nonbasic *) malloc(sizeof(nonbasic));
   t->var=g;
   t->next=NULL;
@@ -417,9 +431,12 @@ nonbasic* addNonb(node *g,nonbasic *head){
 }
 
 clos_path* addNodeCl(node *g,clos_path *head,int p){
+  //This function adds a new clos_path struct variable with var g into the list (Header: head) 
   clos_path *temp=head, *t1=NULL;
-  clos_path *p1=head;
-  
+  /*
+     Here,
+     temp, t1 are temporary pointers used for traversal and creating a new struct variable respectively
+   */
   t1=(clos_path *) malloc(sizeof(clos_path));
   t1->var=g;
   t1->next=NULL;
@@ -435,14 +452,19 @@ clos_path* addNodeCl(node *g,clos_path *head,int p){
     head=t1;
   }
 
-  p1=head;
   return head;
 }
 
 node *findEnt(nonbasic *h){
+  //This function finds the entering variable from the given nonbasic array
   int max=0;
   nonbasic *t=h;
   node *temp=NULL;
+  /*
+     Here,
+          t, temp are temporary pointers used for traversal and pointing to a node variable respectively
+   */
+
   while(t!=NULL){
     if(max < t->var->coeff){
       max=t->var->coeff;
@@ -457,12 +479,22 @@ node *findEnt(nonbasic *h){
   return temp;
 }
 
-void findLeav(clos_path *h,node *ent, node *head){ 
+void findLeav(clos_path *h,node *ent, node *head){
+  /*This function finds the leaving variable from the given clos_path list
+                  & adjusts the quantities at each node accordingly
+    */             
   clos_path *h1=h, *h2=NULL, *h3, *h4;
   node *temp=NULL, *leav=NULL;
   int t, redc, low_quant=9999999;
-  int plus, k, i=0;
-  
+  int plus, k;
+  /*
+     Here,
+          h1, h2, h3, h4 are temporary pointers used for traversal and point to a particular clos_path variable
+          temp, leav are pointers pointing the entering variable and leaving variable respectively
+          t is a dummy variable used to adjust the clos_path list in the correct order
+          plus and redc are for adjusting the quantities at each nodal position
+          low_quant is used for finding the max. quantity possible at entering node position
+    */
   h1=addNodeCl(ent,h1,0);
   
   h2=h1;
