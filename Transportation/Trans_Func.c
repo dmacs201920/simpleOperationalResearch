@@ -179,7 +179,6 @@ void BalanceTableau(int *array,int *M,int *N,node *head){
     def1=def;
     while(count<2){
       temp=newNode(0-sum,-1,-1);
-      printf("Re..\n");
       temp0->right=temp;
       temp0=temp;
       temp->down=def1->down;
@@ -363,7 +362,14 @@ void iter_nFindSol(node *head){
 }
 
 int findNum(int a[M+N],int i,int j){
+  //This function finds which of the i, j are present in a[M+N]
+
   int k=0;
+  /*
+     Here,
+     k is used for traversing the array
+   */
+
   while(k<M+N){
     if(a[k]==i || a[k]==j)
       return a[k];
@@ -374,7 +380,12 @@ int findNum(int a[M+N],int i,int j){
 }
 
 void Initialise(int *A,int *B,int n){
+  //This function initialises all the array elements to 99999
   int i;
+  /*
+     Here,
+     i is an iterative variable used for entering into the arrays
+   */
   for(i=0;i<n;i++){
     A[i]=-99999;
     B[i]=99999;
@@ -382,6 +393,7 @@ void Initialise(int *A,int *B,int n){
 }
 
 int findNode(node *h,clos_path *h3){
+
   clos_path *t=h3;
   if(t==NULL) return 0;
   while(t!=NULL){
@@ -512,6 +524,9 @@ void findLeav(clos_path *h,node *ent, node *head){
 }
 
 clos_path* findNbrs(node **t,clos_path *h,int c){
+  /*This function finds neighbours of a particular variable in clos_path list
+    & deletes if it doesn't have two neighbours
+   */
   node *nbr[2]={NULL,NULL}, *temp=NULL;
   clos_path *h1=h;
   int k=0;
@@ -540,7 +555,12 @@ clos_path* findNbrs(node **t,clos_path *h,int c){
 }
 
 clos_path* delNodeCl(node *h3,clos_path *h){
+  //This function deletes a node from clos_path structured list
   clos_path *temp, *t=h;
+  /*
+     Here,
+     temp, t are temporary clos_path pointers used for the deletion
+   */
   if(t->var!=h3){
     if(t->next!=NULL){
       while(t->next->var!=h3)
@@ -561,11 +581,21 @@ clos_path* delNodeCl(node *h3,clos_path *h){
 }
 
 void displayAns(node *head){
+  //This function displays the final tableau (Optimum solution) and the optimum cost
   fprintf(f,"\nFinal Solution\n");
   printf("\nFinal Solution\n");
   node *rp, *dp = head;
   int i, j, totalcost=0;
   char ch='A',sp=' ';int s=1;
+  /*
+     Here,
+          i,j are used for traversing the tableau
+          rp, dp are head pointers used to point an individual node in the tableau
+          totalcost is for calculating the optimal cost
+          ch,s are for displaying names of sources and destinations respectively
+          sp is for printing spaces
+   */
+
   nl(70);
   putchar('\n');
   fputc('\n',f);
@@ -606,9 +636,13 @@ void displayAns(node *head){
   printf("\nTotal cost:%d\n\n",totalcost);
 }
 
-void nl(int k)
-{
+void nl(int k){
+  //This function is used for displaying the output in auser-friendly manner
   int j;
+  /*
+     Here,
+     j is an iterative variable
+   */
   for(j=0;j<k;j++){ 
     fputc('-',f);
     putchar('-');
