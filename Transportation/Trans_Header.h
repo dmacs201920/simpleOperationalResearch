@@ -8,7 +8,7 @@
              III B.Sc-Maths
              171207
   Written on:
-             
+             20-03-2020             
  */
 #include<stdio.h>
 #include<stdlib.h>
