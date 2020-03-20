@@ -364,13 +364,6 @@ void iter_nFindSol(node *head){
 
 int findNum(int a[M+N],int i,int j){
   int k=0;
-  /*if(i<0 && j<0){
-    while(k<M+N)
-      if(a[k]==i)
-	return k;
-    return 0;
-  }
-  */
   while(k<M+N){
     if(a[k]==i || a[k]==j)
       return a[k];
@@ -464,15 +457,6 @@ void findLeav(clos_path *h,node *ent, node *head){
   
   while(h2!=NULL){
     h1=findNbrs(&(h2->var),h1,-1),h2=h2->next;
-    /*
-    clos_path *p1=h1;
-    while(p1!=NULL)
-    {
-      printf("|%3d  %3d  %p   %p\n",p1->var->cost,p1->var->quantity,p1->var, p1);
-      p1=p1->next;
-    }
-    printf("LLLLLLLLLLLLLLL\n");
-    */
   }
   h=h1;
   
