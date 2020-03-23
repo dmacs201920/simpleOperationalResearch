@@ -1,4 +1,10 @@
-#include "Assign_Header.h"
+/*                                              AUM SRI SAI RAM
+Name:HEAM CHAND B.
+Regd.no:173202.
+Date:23-03-2020.
+*/
+//This file contains the main function required to solve 'THE ASSIGNMENT MODEL' using "HUNGARIAN METHOD".
+#include "Assign_Header.h"                    //This statement calls the header file in which prototypes are decleared.
 
 void main(int argc,char *args[])
 {
@@ -15,10 +21,10 @@ void main(int argc,char *args[])
     exit(0);
   }
 
-  fscanf(f,"%d",&m),fgetc(f),fscanf(f,"%d",&n),fgetc(f);
-
-  inputArray(m,n);
-
-  hungarian();
-
+  fscanf(f,"%d",&m);              //Reads the data from the file and assigns the no of rows.
+  fgetc(f);
+  fscanf(f,"%d",&n);              //Reads the data from the file and assigns the no of columns.
+  fgetc(f);
+  inputArray(m,n);                 //calls the function
+  hungarian();                      //calls the function
 }
