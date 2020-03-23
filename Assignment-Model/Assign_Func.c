@@ -1,26 +1,32 @@
-#include "Assign_Header.h"
+/*                                               AUM SRI SAI RAM
+Name:HEAM CHAND B.
+Regd.no:173202.
+Dste:23-03-2020.
+*/
+//This file contains the functions that are defined in header file to solve 'THE ASSIGNMENT MODEL' problem using "HUNGARIAN METHOD".
+#include "Assign_Header.h"                  //This statement calls the header file containing the prototypes defined.
 #define INF (0x7FFFFFFF)
 
 #define verbose (1)
 
-int M,N;
+int M,N;                        //Golabal variables in INTEGER type
 
 //This function takes the input from the file
 void inputArray(int m,int n)
 {
-    Array= malloc(m*sizeof(int));           
-    Result= malloc(m*sizeof(int));
+    Array= malloc(m*sizeof(int));                       //allocates the memory with size of int.
+    Result= malloc(m*sizeof(int));                      //allocates the memory with size of int.
     int i,j,data;
     for(i=0;i<m;i++)
     {
-        Array[i]=(int *) malloc(n*sizeof(int));
-        Result[i]=(int *) malloc(n*sizeof(int));
+        Array[i]=(int *) malloc(n*sizeof(int));         //Takes data from the user from the file.
+        Result[i]=(int *) malloc(n*sizeof(int));        //Takes data from the user from the file.
     }
     M=m,N=n;
     for (i=0;i<M;++i)
         for (j=0;j<N;++j)
         {
-            fscanf(f,"%d",&data);
+            fscanf(f,"%d",&data);                      //Reaads data from the file and writes in the 2-D array, in rows & columns.
             fgetc(f);
             Array[i][j]=data;
         }
@@ -51,7 +57,7 @@ void hungarian()
     for (i=0;i<M;++i)
         for (j=0;j<N;++j)
         {
-            Result[i][j]=0;
+            Result[i][j]=0;                      //2-D array RESULT is assigned with zeroes entries with size as decleared
         }
 
     // Begin subtract row minima in order to start with lots of zeroes
@@ -61,7 +67,7 @@ void hungarian()
         for (k=1;k<m;k++)
             if (Array[l][k]<s)
                 s=Array[l][k];
-        cost+=s;
+        cost+=s;                                    //adds all the minimum of each column
         if (s!=0)
             for (k=0;k<m;k++)
                 Array[l][k]-=s;
@@ -305,4 +311,3 @@ void nl(int k)
         putchar('-');
     putchar('\n'); 
 }
-
