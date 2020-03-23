@@ -3,7 +3,7 @@ Name:HEAM CHAND B.
 Regd.no:173202.
 Dste:23-03-2020.
 */
-//This file contains the functions that are defined in header file to solve 'THE ASSIGNMENT MODEL' problem using "HUNGARIAN METHOD".
+//This file is the header file to solve 'THE ASSIGNMENT MODEL' problem using "HUNGARIAN METHOD".
 
 #include <stdio.h>
 #include <stdlib.h>
