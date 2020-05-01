@@ -1,9 +1,14 @@
-/*                                               AUM SRI SAI RAM
-Name:HEAM CHAND B & P S SRUJAN
-Regd.no:173202, 171207
-Dste:23-03-2020.
-*/
-//This file is the header file to solve 'LPP' problem using "SIMPLEX METHOD".
+/*                                     AUM SRI SAI RAM
+Purpose:
+           Declaring  the functions used in the Simplex model implementation
+Written on:
+           20-03-2020
+Written by:
+           P.Sai Srujan               Heam Chand
+           III BSc Maths              III BSc Maths
+           171207                     173202
+ */
+
 #include<stdio.h>
 #include<stdlib.h>
 #include<math.h>

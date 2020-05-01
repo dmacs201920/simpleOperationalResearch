@@ -1,9 +1,14 @@
-/*                                               AUM SRI SAI RAM
-Name:HEAM CHAND B & P S SRUJAN.
-Regd.no:173202,171207
-Dste:23-03-2020.
-*/
-//This file contains the functions that are defined in header file to solve 'LPP' problem using "SIMPLEX METHOD".
+/*                                     AUM SRI SAI RAM
+Purpose:
+           Defining the functions used in the Simplex model implementation
+Written on:
+           20-03-2020
+Written by:
+           P.Sai Srujan               Heam Chand
+           III BSc Maths              III BSc Maths
+           171207                     173202
+ */
+
 #define CMAX 10
 #define VMAX 10
 #include "Simplex_Header.h"
@@ -11,10 +16,25 @@ int NC, NV, NOPTIMAL=1,P1,P2,XERR;
 char R;
 double array[CMAX][VMAX];
 FILE *f;
+/*
+  Here,
+       NC, NV represent no.of variables and no. of constraints respectively
+       P1, P2 represent entering (variable's) column and leaving (variables's) row respectively
+       XERR is for breaking out if we can't find a valid solution
+       R shows whether the given problem is a Maximisation prob. or a Minimisation prob.
+       array[CMAX][VMAX] is for constructing a tableau of the input data and to work on it.
+       f represents a pointer in which we are displaying the solution
+   */
 void Data(int argc,char *argv[]) 
 {
+  //This function takes in, the input given and stores it in an array to work on.
   double R1,R2;
   int i,j;
+  /*
+     Here,
+          R1, R2 are temporary var. used for storing the inputed values in a particular way(in the array).
+          i, j are used an iteration variables
+     */
   f = fopen(argv[1],"a");
   if (f == NULL)
   { printf("file doesn't exist\n");
@@ -85,21 +105,29 @@ void Data(int argc,char *argv[])
   for(i=NV+1; i<=NV+NC; i++) 
     array[i-NV+1][0] = i;
 }
-void Pivot();
-void Formula();
-void Optimize();
+
 void Simplex() 
 {
+  //This function uses the simplex method's algorithm repeatedly until it finds optimum
   while(NOPTIMAL==1){
     Pivot();
     Formula();
     Optimize();
   }
 }
+
 void Pivot() 
 {
+  //This function finds the pivot row, pivot column and the pivot element
   double RAP,V,XMAX;
   int i,j,leav;
+  /*
+     Here,
+          V is used for changing leaving and entering var.
+          XMAX, RAP are used to find pivot column and pivot row respectively
+          i, j are iterative var.
+          leav represents whether we have found a leaving var. or not
+     */
   XMAX = 0.0;
   for(j=2; j<=NV+1; j++)
   {
@@ -135,9 +163,15 @@ void Pivot()
   array[0][P2] = array[P1][0];
   array[P1][0] = V;
 }
+
 void Formula() 
-{;
+{
+  //This function appyiing the formula for leaving var. row and the other rows
   int i,j;
+  /*
+     Here,
+          i, j are used as iteration variables
+     */
   for (i=1; i<=NC+1; i++)
   {
     if (i == P1)
@@ -163,9 +197,15 @@ void Formula()
     array[i][P2] *= array[P1][P2];
   }
 }
+
 void Optimize()
 {
+  //This function checks whether the obtained solution is optimum or not
   int i,j;
+  /*
+     Here,
+          i, j are used as iteration variables
+     */
   for (i=2; i<=NC+1; i++)
     if (array[i][1] < 0.0)
       XERR = 1;
@@ -176,12 +216,20 @@ void Optimize()
     if (array[1][j] > 0.0)
       NOPTIMAL = 1;
 }
+
 void Results() 
 {
+  //This function prints out the results for the input problem
   int pseudo=0;
+  int i,j;
+  /*
+     Here,
+          pseudo is for checking whether the solution obtained is pseudo-optimum
+          i, j are used as iteration variables
+     */
+
   printf("\n\n RESULTS:\n\n");
   fprintf(f,"\n\n RESULTS:\n\n");
-  int i,j;
   if (XERR != 0){
     printf(" NO SOLUTION.\n");
     fprintf(f," NO SOLUTION.\n");
